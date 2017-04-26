@@ -1,4 +1,4 @@
-#include "NodeStatus.hpp"
+#include "Graph.hpp"
 
 #include <algorithm>
 //#include <cmath>
@@ -6,55 +6,55 @@
 #include "Edge.hpp"
 
 namespace GraphStructure {
-const std::list<Node> &NodeStatus::getNodes() const {
+const std::list<Node> &Graph::getNodes() const {
     return nodes;
 }
 
-const std::list<Edge> &NodeStatus::getEdges() const {
+const std::list<Edge> &Graph::getEdges() const {
     return edges;
 }
 
-const std::list<Node *> &NodeStatus::getSelectedNodes() const {
+const std::list<Node *> &Graph::getSelectedNodes() const {
     return selectedNodes;
 }
 
-const std::vector<Edge *> &NodeStatus::getSelectedEdges() const {
+const std::vector<Edge *> &Graph::getSelectedEdges() const {
     return selectedEdges;
 }
 
-void NodeStatus::selectNode(Node &node) {
+void Graph::selectNode(Node &node) {
     if(!isNodeSelected(&node))
         selectedNodes.push_back(&node);
 }
 
-void NodeStatus::selectEdge(Edge &edge) {
+void Graph::selectEdge(Edge &edge) {
     if(!isEdgeSelected(&edge))
         selectedEdges.push_back(&edge);
 }
 
-/*void NodeStatus::selectNodes() {
+/*void Graph::selectNodes() {
     deselectNodes();
     for(auto node = nodes.begin(); node != nodes.end(); ++node) {
         selectedNodes.push_back(&*node);
     }
 }
 
-void NodeStatus::selectEdges() {
+void Graph::selectEdges() {
     deselectEdges();
     for(auto edge = edges.begin(); edge != edges.end(); ++edge) {
         selectedEdges.push_back(&*edge);
     }
 }*/
 
-void NodeStatus::deselectNodes() {
+void Graph::deselectNodes() {
     selectedNodes.clear();
 }
 
-void NodeStatus::deselectEdges() {
+void Graph::deselectEdges() {
     selectedEdges.clear();
 }
 
-Node *NodeStatus::getNodeAt(wxPoint pos) {
+Node *Graph::getNodeAt(wxPoint pos) {
     for(auto node = nodes.begin(); node != nodes.end(); ++node) {
         if( hypot(node->pos.x - pos.x, node->pos.y - pos.y) < node->radius ) {
             return &*node;
@@ -63,7 +63,7 @@ Node *NodeStatus::getNodeAt(wxPoint pos) {
     return nullptr;
 }
 
-Node* NodeStatus::getNodeById(int id){
+Node* Graph::getNodeById(int id){
     for(auto node = nodes.begin(); node != nodes.end(); ++node) {
         if( id == node->id ) {
             return &*node;
@@ -72,7 +72,7 @@ Node* NodeStatus::getNodeById(int id){
     return nullptr;
 }
 
-Edge *NodeStatus::getEdgeAt(wxPoint pos) {
+Edge *Graph::getEdgeAt(wxPoint pos) {
     for(auto edge = edges.begin(); edge != edges.end(); ++edge) {
         ///test if the point c is inside a pre-defined distance from the line
         double distance = 0;
@@ -103,7 +103,7 @@ Edge *NodeStatus::getEdgeAt(wxPoint pos) {
     return nullptr;
 }
 
-void NodeStatus::addNode(Node node, int id) {
+void Graph::addNode(Node node, int id) {
     if(id == -1)
         node.id = nodes.size();
     else
@@ -111,7 +111,7 @@ void NodeStatus::addNode(Node node, int id) {
     nodes.push_back(node);
 }
 
-void NodeStatus::removeNode(const Node *node) {
+void Graph::removeNode(const Node *node) {
     nodes.remove_if( [node](const Node& i) {
         return &i == node;
     });
@@ -120,37 +120,37 @@ void NodeStatus::removeNode(const Node *node) {
     });
 }
 
-void NodeStatus::removeEdge(const Edge *edge) {
+void Graph::removeEdge(const Edge *edge) {
     edges.remove_if( [edge](const Edge& i) {
         return &i == edge;
     });
 }
 
-bool NodeStatus::isNodeSelected(const Node *node) const {
+bool Graph::isNodeSelected(const Node *node) const {
     return std::find( std::begin(getSelectedNodes()), std::end(getSelectedNodes()), node) != std::end(getSelectedNodes());
 }
 
-bool NodeStatus::isEdgeSelected(const Edge *edge) const {
+bool Graph::isEdgeSelected(const Edge *edge) const {
     return std::find( std::begin(getSelectedEdges()), std::end(getSelectedEdges()), edge) != std::end(getSelectedEdges());
 }
 
-bool NodeStatus::hasNodeSelected() const {
+bool Graph::hasNodeSelected() const {
     return !getSelectedNodes().empty();
 }
 
-bool NodeStatus::hasEdgeSelected() const {
+bool Graph::hasEdgeSelected() const {
     return !getSelectedEdges().empty();
 }
 
-void NodeStatus::removeAllNodes() {
+void Graph::removeAllNodes() {
     nodes.clear();
 }
 
-void NodeStatus::removeAllEdges() {
+void Graph::removeAllEdges() {
     edges.clear();
 }
 
-void NodeStatus::connect(Node &from, Node &to, int weight) {
+void Graph::connect(Node &from, Node &to, int weight) {
     if(&from == &to) {
         return;
     }
@@ -167,7 +167,7 @@ void NodeStatus::connect(Node &from, Node &to, int weight) {
     to.connections.push_back(from);
 }
 
-NodeStatus::AdjacencyList NodeStatus::getAdjacencyList() {
+Graph::AdjacencyList Graph::getAdjacencyList() {
     AdjacencyList adjacencyList;
     for(int nodeIndex = 0; nodeIndex < nodes.size(); nodeIndex++)
     {
@@ -177,7 +177,7 @@ NodeStatus::AdjacencyList NodeStatus::getAdjacencyList() {
     return adjacencyList;
 }
 
-std::list<std::pair<int ,int>> NodeStatus::getAdjacentNodes(const Node& node)
+std::list<std::pair<int ,int>> Graph::getAdjacentNodes(const Node& node)
 {
     std::list<std::pair<int ,int>> adjacentNodes;
     for(auto edge: edges)

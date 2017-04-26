@@ -89,8 +89,8 @@
 		<Unit filename="src/graph/Node.hpp" />
 		<Unit filename="src/graph/NodeProperties.cpp" />
 		<Unit filename="src/graph/NodeProperties.hpp" />
-		<Unit filename="src/graph/NodeStatus.cpp" />
-		<Unit filename="src/graph/NodeStatus.hpp" />
+		<Unit filename="src/graph/Graph.cpp" />
+		<Unit filename="src/graph/Graph.hpp" />
 		<Unit filename="src/graph/NodeVisualizer.cpp" />
 		<Unit filename="src/graph/NodeVisualizer.hpp" />
 		<Unit filename="src/graph/ViewMenuEvent.hpp" />

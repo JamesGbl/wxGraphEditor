@@ -7,5 +7,5 @@ class PrimAlgorithm : public GraphAlgorithm
         PrimAlgorithm(){};
         ~PrimAlgorithm(){};
 
-        void operator() (GraphStructure::NodeStatus &nodeStatus);
+        void operator() (GraphStructure::Graph &graph);
 };

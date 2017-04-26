@@ -9,7 +9,7 @@ namespace GraphStructure {
 class Node;
 class Edge;
 
-class NodeStatus {
+class Graph {
   protected:
     std::list<Node> nodes;
     std::list<Edge> edges;

@@ -30,12 +30,12 @@ InstrumentsPanel::InstrumentsPanel(wxFrame *parent, NodeVisualizer *nv) :
     });
     algorithmButton->Bind(wxEVT_BUTTON, [=](wxCommandEvent &) {
         PrimAlgorithm prim;
-        prim(nv->nodeStatus);
+        prim(nv->graph);
     });
     adjacencyListButton->Bind(wxEVT_BUTTON, [=](wxCommandEvent &) {
-        std::map<int, std::list<std::pair<int ,int>>> adjList = nv->nodeStatus.getAdjacencyList();
+        std::map<int, std::list<std::pair<int ,int>>> adjList = nv->graph.getAdjacencyList();
         wxString adjListStr;
-        for(auto node: nv->nodeStatus.getNodes()){
+        for(auto node: nv->graph.getNodes()){
             adjListStr += wxString::Format(_("%i: {"), node.id);
             for(auto adjacent: adjList[node.id]){
                     adjListStr += wxString::Format(_("id%i "), adjacent.second);

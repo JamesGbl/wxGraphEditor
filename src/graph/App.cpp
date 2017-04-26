@@ -34,35 +34,35 @@ bool App::isModified()const {
 
 void App::selectNode(Node &node) {
     views.nodeProperties->showNode(node);
-    NodeStatus::selectNode(node);
+    Graph::selectNode(node);
     views.nodeVisualizer->Refresh();
 }
 
 void App::deselectNodes() {
-    NodeStatus::deselectNodes();
+    Graph::deselectNodes();
     views.nodeVisualizer->Refresh();
 }
 
 void App::addNode(Node node) {
     modified = true;
-    NodeStatus::addNode(node);
+    Graph::addNode(node);
     views.nodeVisualizer->Refresh();
 }
 
 void App::removeNode(const Node *node) {
     modified = true;
-    NodeStatus::removeNode(node);
+    Graph::removeNode(node);
     views.nodeVisualizer->Refresh();
 }
 
 void App::removeAllNodes() {
     modified = true;
-    NodeStatus::removeAllNodes();
+    Graph::removeAllNodes();
     views.nodeVisualizer->Refresh();
 }
 
 void App::connect(Node &from, Node &to) {
-    NodeStatus::connect(from, to);
+    Graph::connect(from, to);
     views.nodeVisualizer->Refresh();
 }
 

@@ -2,7 +2,7 @@
 
 #include "wx.hpp"
 #include "Node.hpp"
-#include "NodeStatus.hpp"
+#include "Graph.hpp"
 #include "WindowViews.hpp"
 #include <list>
 #include "App.hpp"
@@ -12,11 +12,11 @@
 namespace GraphStructure {
 class Frame : public wxFrame {
   public:
-    Frame(const wxSize &size, NodeStatus &nodeStatus);
+    Frame(const wxSize &size, Graph &graph);
 
     void setupLayout(const WindowViewContainer &viewContainer);
   private:
-    NodeStatus &nodeStatus;
+    Graph &graph;
     bool saved = false;
     wxString filePath = _("");
 

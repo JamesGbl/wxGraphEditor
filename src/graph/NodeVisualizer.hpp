@@ -2,7 +2,7 @@
 
 #include "../wx.hpp"
 #include "../GLPane.hpp"
-#include "NodeStatus.hpp"
+#include "Graph.hpp"
 #include "InstrumentsPanel.h"
 #include <list>
 
@@ -59,7 +59,7 @@ class NodeVisualizer : public GLPane {
 
     //Data
   public:
-    NodeStatus &nodeStatus;
+    Graph &graph;
 
   private:
     wxMenu *contextMenuNode;
@@ -70,7 +70,7 @@ class NodeVisualizer : public GLPane {
     Node *getNodeAt(wxPoint pos);
 
   public:
-    NodeVisualizer(wxFrame *parent, NodeStatus &nodeStatus);
+    NodeVisualizer(wxFrame *parent, Graph &graph);
     virtual ~NodeVisualizer();
 
     NVSelectedInstrument selectedItem = NVSelectedInstrument::NODE_SELECTED;

@@ -5,16 +5,16 @@
 #include <queue>
 #include <vector>
 
-void PrimAlgorithm::operator()(GraphStructure::NodeStatus &nodeStatus)
+void PrimAlgorithm::operator()(GraphStructure::Graph &graph)
 {
-    if (nodeStatus.getNodes().size() == 0)
+    if (graph.getNodes().size() == 0)
         return;
 
     using IPair = std::pair<unsigned int, int>;
     const int INF = std::numeric_limits<int>::max();
 
-    GraphStructure::NodeStatus::AdjacencyList adjList = nodeStatus.getAdjacencyList();
-    int nodesNumber = nodeStatus.getNodes().size();
+    GraphStructure::Graph::AdjacencyList adjList = graph.getAdjacencyList();
+    int nodesNumber = graph.getNodes().size();
 
     std::priority_queue< IPair, std::vector <IPair> , std::greater<IPair> > queue;
     std::vector<int> keys(nodesNumber, INF);
@@ -31,16 +31,16 @@ void PrimAlgorithm::operator()(GraphStructure::NodeStatus &nodeStatus)
         queue.pop();
 
         if(!included[minKeyNode])
-            nodeStatus.selectNode(*nodeStatus.getNodeById(minKeyNode));
+            graph.selectNode(*graph.getNodeById(minKeyNode));
 
         included[minKeyNode] = true;
         if (parent[minKeyNode] != -1)
         {
-            for(auto&& edge: nodeStatus.getEdges()){
+            for(auto&& edge: graph.getEdges()){
                 if((edge.from.id == minKeyNode && edge.to.id == parent[minKeyNode]) ||
                    (edge.to.id == minKeyNode && edge.from.id == parent[minKeyNode])){
                     GraphStructure::Edge *tempEdge = const_cast<Edge*>(&edge);
-                    nodeStatus.selectEdge(*tempEdge);
+                    graph.selectEdge(*tempEdge);
                 }
             }
         }

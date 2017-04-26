@@ -27,9 +27,9 @@ wxBEGIN_EVENT_TABLE(NodeVisualizer, GLPane)
     EVT_CONTEXT_MENU(NodeVisualizer::onContextMenu)
 wxEND_EVENT_TABLE()
 
-NodeVisualizer::NodeVisualizer(wxFrame *parent, NodeStatus &nodeStatus):
+NodeVisualizer::NodeVisualizer(wxFrame *parent, Graph &graph):
     GLPane(parent), mouseDrag(false), mouseDragInitiationDistance(8), x(0.0f),
-    y(0.0f), scale(1.0f), minScale(1/4), maxScale(4), nodeStatus(nodeStatus) {
+    y(0.0f), scale(1.0f), minScale(1/4), maxScale(4), graph(graph) {
     contextMenuNode = new wxMenu;
 
     contextMenuNode->Append(ItemContextMenuID::UNKNOWN, "<Node>")->Enable(false);
@@ -41,8 +41,8 @@ NodeVisualizer::NodeVisualizer(wxFrame *parent, NodeStatus &nodeStatus):
 
 NodeVisualizer::~NodeVisualizer() {
     ///Free all allocated nodes
-    nodeStatus.removeAllNodes();
-    nodeStatus.removeAllEdges();
+    graph.removeAllNodes();
+    graph.removeAllEdges();
 
     ///Free menu
     delete contextMenuNode;
@@ -52,22 +52,22 @@ void NodeVisualizer::onMouseLeftDown(wxMouseEvent &event) {
     mouseClickAbsolutePos = getMouseEventAbsolutePosition(event);
     const wxPoint mouseClickPos = getMouseEventPosition(event);
 
-    auto edge = nodeStatus.getEdgeAt(mouseClickPos);
-    auto node = nodeStatus.getNodeAt(mouseClickPos);
+    auto edge = graph.getEdgeAt(mouseClickPos);
+    auto node = graph.getNodeAt(mouseClickPos);
 
     //node ? node : (edge ? edge : nullptr)
     if(node) {
         if(!event.ShiftDown())
-            nodeStatus.deselectNodes();
-        nodeStatus.selectNode(*node);
+            graph.deselectNodes();
+        graph.selectNode(*node);
         mouseClickType = NVMouseClickType::SELECT_NODE;
-        nodeStatus.deselectEdges();
+        graph.deselectEdges();
     } else if(edge) {
         if(!event.ShiftDown())
-            nodeStatus.deselectEdges();
-        nodeStatus.selectEdge(*edge);
+            graph.deselectEdges();
+        graph.selectEdge(*edge);
         mouseClickType = NVMouseClickType::SELECT_EDGE;
-        nodeStatus.deselectNodes();
+        graph.deselectNodes();
     } else {
         mouseClickType = NVMouseClickType::EMPTYSPACE;
     }
@@ -80,18 +80,18 @@ void NodeVisualizer::onMouseLeftUp(wxMouseEvent &event) {
         mouseDrag = false;
     } else {
         if(mouseClickType == NVMouseClickType::EMPTYSPACE) {
-            if(nodeStatus.hasNodeSelected() || nodeStatus.hasEdgeSelected()) {
-                nodeStatus.deselectNodes();
-                nodeStatus.deselectEdges();
+            if(graph.hasNodeSelected() || graph.hasEdgeSelected()) {
+                graph.deselectNodes();
+                graph.deselectEdges();
             }
         }
     }
     if(drawingEdge == true) {
         drawingEdge = false;
         Refresh();
-        auto node = nodeStatus.getNodeAt(mouseCurrentPos);
-        if(node && node != nodeStatus.getSelectedNodes().front()) {
-            nodeStatus.connect(*nodeStatus.getSelectedNodes().front(), *node);
+        auto node = graph.getNodeAt(mouseCurrentPos);
+        if(node && node != graph.getSelectedNodes().front()) {
+            graph.connect(*graph.getSelectedNodes().front(), *node);
         }
     }
 
@@ -103,21 +103,21 @@ void NodeVisualizer::onMouseDClick(wxMouseEvent &event) {
     mouseClickAbsolutePos = getMouseEventAbsolutePosition(event);
     const wxPoint mouseClickPos = getMouseEventPosition(event);
 
-    auto node = nodeStatus.getNodeAt(mouseClickPos);
+    auto node = graph.getNodeAt(mouseClickPos);
     if(node) {
         mouseClickType = NVMouseClickType::SELECT_NODE;
         if(!event.ShiftDown())
-            nodeStatus.deselectNodes();
-        nodeStatus.deselectEdges();
-        nodeStatus.selectNode(*node);
+            graph.deselectNodes();
+        graph.deselectEdges();
+        graph.selectNode(*node);
     } else {
-        if(nodeStatus.hasNodeSelected()) {
-            nodeStatus.deselectNodes();
-            nodeStatus.deselectEdges();
+        if(graph.hasNodeSelected()) {
+            graph.deselectNodes();
+            graph.deselectEdges();
         }
 
         mouseCurrentPos = getMouseEventPosition(event);
-        nodeStatus.addNode(Node(mouseCurrentPos, _(""))); ///Create new node at mouse position
+        graph.addNode(Node(mouseCurrentPos, _(""))); ///Create new node at mouse position
         Refresh();
     }
 
@@ -130,7 +130,7 @@ void NodeVisualizer::onMouseRightDown(wxMouseEvent &event) {
     const wxPoint mouseClickPos = getMouseEventPosition(event);
 
     //If clicked on node
-    auto node = nodeStatus.getNodeAt(mouseClickPos);
+    auto node = graph.getNodeAt(mouseClickPos);
     if(node) {
         PopupMenu(contextMenuNode);
     } else {
@@ -161,25 +161,25 @@ void NodeVisualizer::onMouseLeaveWindow(wxMouseEvent &event) {
 void NodeVisualizer::onKeyDown(wxKeyEvent &event) {
     switch(event.GetKeyCode()) {
         case WXK_SPACE:
-            if(nodeStatus.hasNodeSelected() == true) {
-                nodeStatus.connect(*nodeStatus.getSelectedNodes().front(), *nodeStatus.getSelectedNodes().back());
+            if(graph.hasNodeSelected() == true) {
+                graph.connect(*graph.getSelectedNodes().front(), *graph.getSelectedNodes().back());
                 Refresh();
             }
             break;
 
         case WXK_DELETE:
-            if(nodeStatus.hasNodeSelected()){
-                for(auto node = nodeStatus.getSelectedNodes().begin(); node != nodeStatus.getSelectedNodes().end(); ++node) {
-                    nodeStatus.removeNode(*node);
+            if(graph.hasNodeSelected()){
+                for(auto node = graph.getSelectedNodes().begin(); node != graph.getSelectedNodes().end(); ++node) {
+                    graph.removeNode(*node);
                 }
             }
-            if(nodeStatus.hasEdgeSelected()){
-                for(auto edge = nodeStatus.getSelectedEdges().begin(); edge != nodeStatus.getSelectedEdges().end(); ++edge) {
-                    nodeStatus.removeEdge(*edge);
+            if(graph.hasEdgeSelected()){
+                for(auto edge = graph.getSelectedEdges().begin(); edge != graph.getSelectedEdges().end(); ++edge) {
+                    graph.removeEdge(*edge);
                 }
             }
 
-            nodeStatus.deselectNodes();
+            graph.deselectNodes();
 
             break;
 
@@ -187,14 +187,14 @@ void NodeVisualizer::onKeyDown(wxKeyEvent &event) {
                 auto chr = event.GetUnicodeKey();
 
                 if(chr == 'I') {
-                    if(nodeStatus.hasNodeSelected() == true) {
-                        auto node = nodeStatus.getSelectedNodes().begin();
+                    if(graph.hasNodeSelected() == true) {
+                        auto node = graph.getSelectedNodes().begin();
                         wxString newLabel = wxGetTextFromUser(_T("Enter node label:"), _T("Label"));
                         (*node)->label = newLabel;
                         Refresh();
                     }
-                    if(nodeStatus.hasEdgeSelected() == true) {
-                        auto edge = nodeStatus.getSelectedEdges().begin();
+                    if(graph.hasEdgeSelected() == true) {
+                        auto edge = graph.getSelectedEdges().begin();
                         int newWeight = wxAtoi(wxGetTextFromUser(_T("Enter edge weight:"), _T("Weight")));
                         (*edge)->weight = newWeight;
                         Refresh();
@@ -225,7 +225,7 @@ void NodeVisualizer::onMouseMove(wxMouseEvent &event) {
                 case NVMouseClickType::SELECT_NODE: {
                         mouseCurrentPos = getMouseEventPosition(event);
                         //!@TODO: Implement moving all selected nodes
-                        nodeStatus.getSelectedNodes().front()->pos = mouseCurrentPos;
+                        graph.getSelectedNodes().front()->pos = mouseCurrentPos;
                     }
                     break;
 
@@ -237,7 +237,7 @@ void NodeVisualizer::onMouseMove(wxMouseEvent &event) {
             if(mouseClickType == NVMouseClickType::SELECT_NODE) {
                 mouseCurrentPos = getMouseEventPosition(event);
 
-                mouseStartPos = wxPoint(nodeStatus.getSelectedNodes().front()->pos.x +x, nodeStatus.getSelectedNodes().front()->pos.y +y);
+                mouseStartPos = wxPoint(graph.getSelectedNodes().front()->pos.x +x, graph.getSelectedNodes().front()->pos.y +y);
                 drawingEdge = true;
                 Refresh();
             }
@@ -266,13 +266,13 @@ void NodeVisualizer::render(wxPaintEvent &event) {
     glScalef(scale, scale, 1.0f);
 
     ///Render edges
-    std::for_each(nodeStatus.getEdges().begin(), nodeStatus.getEdges().end(), [=](const Edge& edge) {
-        edge.render(nodeStatus.isEdgeSelected(&edge));
+    std::for_each(graph.getEdges().begin(), graph.getEdges().end(), [=](const Edge& edge) {
+        edge.render(graph.isEdgeSelected(&edge));
     });
 
     ///Render nodes
-    std::for_each(nodeStatus.getNodes().begin(), nodeStatus.getNodes().end(), [=](const Node& node) {
-        node.render(nodeStatus.isNodeSelected(&node));
+    std::for_each(graph.getNodes().begin(), graph.getNodes().end(), [=](const Node& node) {
+        node.render(graph.isNodeSelected(&node));
     });
 
     if(drawingEdge == true) {

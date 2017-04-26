@@ -8,14 +8,14 @@
 #include <wx/wx.h>
 #include "../wx.hpp"
 #include <list>
-#include "NodeStatus.hpp"
+#include "Graph.hpp"
 #include "WindowViews.hpp"
 
 namespace GraphStructure {
 class Node;
 class Edge;
 
-class App : public wxApp, public NodeStatus {
+class App : public wxApp, public Graph {
   public:
     WindowViewContainer views;
     bool modified;
