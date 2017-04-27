@@ -3,24 +3,26 @@
 #include "wx.hpp"
 #include "Node.hpp"
 #include "Graph.hpp"
-#include "WindowViews.hpp"
 #include <list>
 #include "App.hpp"
+#include "WindowViews.hpp"
 
 #define GRAPH_EDITOR_VERSION "0.9rc"
 
 namespace GraphStructure {
 class Frame : public wxFrame {
   public:
-    Frame(const wxSize &size, Graph &graph);
+    Frame(const wxSize &windowSize);
 
-    void setupLayout(const WindowViewContainer &viewContainer);
+    Graph *graph = new Graph();
+
+    WindowViewContainer viewContainer;
+
+    void setupLayout();
+
   private:
-    Graph &graph;
     bool saved = false;
     wxString filePath = _("");
-
-    bool showSaveConfirmation();
 
     void onNew   (wxCommandEvent &event);
     void onClose (wxCloseEvent &event);

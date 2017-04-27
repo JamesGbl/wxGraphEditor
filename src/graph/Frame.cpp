@@ -12,6 +12,7 @@
 #include <wx/wfstream.h>
 #include "defs.h"
 #include "NodeVisualizer.hpp"
+#include "NodeProperties.hpp"
 #include <wx/xml/xml.h>
 
 namespace GraphStructure {
@@ -25,8 +26,12 @@ wxBEGIN_EVENT_TABLE(Frame, wxFrame)
     EVT_CLOSE(Frame::onClose)
 wxEND_EVENT_TABLE()
 
-Frame::Frame(const wxSize &size, Graph &graph) :
-    wxFrame(NULL, wxID_ANY, wxT(APP_NAME), wxDefaultPosition, size), graph(graph) {
+Frame::Frame(const wxSize &windowSize) :
+    wxFrame(NULL, wxID_ANY, wxT(APP_NAME), wxDefaultPosition, windowSize) {
+    viewContainer.nodeProperties = new NodeProperties(this);
+    viewContainer.nodeVisualizer = new NodeVisualizer(this, *graph, *viewContainer.nodeProperties);
+    viewContainer.InstrumentsPanel = new InstrumentsPanel(this, viewContainer.nodeVisualizer);
+
     wxMenuBar *mbar = new wxMenuBar();
     wxMenu *fileMenu = new wxMenu(_T(""));
     fileMenu->Append(wxID_NEW, _("&New\tCtrl-N"), _("New graph"));
@@ -52,7 +57,7 @@ Frame::Frame(const wxSize &size, Graph &graph) :
     SetIcon(wxIcon("aaaa"));
 }
 
-void Frame::setupLayout(const WindowViewContainer &viewContainer) {
+void Frame::setupLayout() {
     wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
     sizer->Add(
         viewContainer.views[WindowViews::InstrumentsPanel],
@@ -71,18 +76,13 @@ void Frame::setupLayout(const WindowViewContainer &viewContainer) {
         wxEXPAND
     );
 
-    sizer->Add(
-        sizerV,
-        false,
-        wxEXPAND
-    );
+    sizer->Add(sizerV, false, wxEXPAND);
     SetSizer(sizer);
-    //SetAutoLayout(true);
 }
 
-void Frame::onNew (wxCommandEvent &event) {
-    graph.removeAllEdges();
-    graph.removeAllNodes();
+void Frame::onNew(wxCommandEvent &event) {
+    graph->removeAllEdges();
+    graph->removeAllNodes();
 }
 
 void Frame::onOpen(wxCommandEvent &WXUNUSED(event)) {
@@ -103,15 +103,15 @@ void Frame::onOpen(wxCommandEvent &WXUNUSED(event)) {
         return;
     }
 
-    graph.removeAllEdges();
-    graph.removeAllNodes();
+    graph->removeAllEdges();
+    graph->removeAllNodes();
 
     wxXmlNode *graphItem = graphXML.GetRoot()->GetChildren();
     while (graphItem) {
         if (graphItem->GetName() == _("Nodes")) {
             wxXmlNode *graphNode = graphItem->GetChildren();
             while (graphNode) {
-                graph.addNode(Node(wxPoint(wxAtoi(graphNode->GetAttribute(_("posX"))),
+                graph->addNode(Node(wxPoint(wxAtoi(graphNode->GetAttribute(_("posX"))),
                                                 wxAtoi(graphNode->GetAttribute(_("posY")))),
                                     graphNode->GetAttribute(_("label"))),
                                     wxAtoi(graphNode->GetAttribute(_("id"))));
@@ -121,15 +121,14 @@ void Frame::onOpen(wxCommandEvent &WXUNUSED(event)) {
         } else if (graphItem->GetName() == _("Edges")) {
             wxXmlNode *graphEdge = graphItem->GetChildren();
             while (graphEdge) {
-                graph.connect(*(graph.getNodeById(wxAtoi(graphEdge->GetAttribute(_("from"))))),
-                                   *(graph.getNodeById(wxAtoi(graphEdge->GetAttribute(_("to"))))),
+                graph->connect(*(graph->getNodeById(wxAtoi(graphEdge->GetAttribute(_("from"))))),
+                                   *(graph->getNodeById(wxAtoi(graphEdge->GetAttribute(_("to"))))),
                                    wxAtoi(graphEdge->GetAttribute(_("weight"))));
                 graphEdge = graphEdge->GetNext();
             }
         }
         graphItem = graphItem->GetNext();
     }
-    //Update();
     Refresh();
 }
 
@@ -161,7 +160,7 @@ void Frame::saveGraph(wxString path){
     graphXML.SetRoot(root);
 
     wxXmlNode *edges = new wxXmlNode (root, wxXML_ELEMENT_NODE, "Edges");
-    for(auto graphEdge: graph.getEdges()) {
+    for(auto graphEdge: graph->getEdges()) {
         wxXmlNode *edge = new wxXmlNode(edges, wxXML_ELEMENT_NODE, _("Edge"));
         edge->AddAttribute("from", wxString::Format(_("%i"), graphEdge.from.id));
         edge->AddAttribute("to", wxString::Format(_("%i"), graphEdge.to.id));
@@ -169,7 +168,7 @@ void Frame::saveGraph(wxString path){
     }
 
     wxXmlNode *nodes = new wxXmlNode (root, wxXML_ELEMENT_NODE, _("Nodes"));
-    for(auto graphNode: graph.getNodes()) {
+    for(auto graphNode: graph->getNodes()) {
         wxXmlNode *node = new wxXmlNode(nodes, wxXML_ELEMENT_NODE, _("Node"));
         node->AddAttribute("posX", wxString::Format(_("%i"), graphNode.pos.x));
         node->AddAttribute("posY", wxString::Format(_("%i"), graphNode.pos.y));
@@ -185,12 +184,10 @@ void Frame::onQuit(wxCommandEvent &event) {
 }
 
 void Frame::onAbout(wxCommandEvent &event) {
-    wxMessageBox(_("GraphEditor v. ") + _(GRAPH_EDITOR_VERSION));
+    wxMessageBox(_("GraphEditor\nversion ") + _(GRAPH_EDITOR_VERSION));
 }
 
 void Frame::onClose(wxCloseEvent &event) {
     Destroy();
 }
-
-
 }

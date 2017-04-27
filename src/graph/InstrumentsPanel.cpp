@@ -42,8 +42,6 @@ InstrumentsPanel::InstrumentsPanel(wxFrame *parent, NodeVisualizer *nv) :
                 }
             adjListStr += _("} ");
         }
-
-
         wxGetTextFromUser(_T("Enter node label:"), _T("Label"), adjListStr);
     });
 

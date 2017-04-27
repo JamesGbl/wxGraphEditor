@@ -6,61 +6,12 @@
 #include "Edge.hpp"
 
 namespace GraphStructure {
-const std::list<Node> &Graph::getNodes() const {
+std::list<Node> &Graph::getNodes() {
     return nodes;
 }
 
-const std::list<Edge> &Graph::getEdges() const {
+std::list<Edge> &Graph::getEdges() {
     return edges;
-}
-
-const std::list<Node *> &Graph::getSelectedNodes() const {
-    return selectedNodes;
-}
-
-const std::vector<Edge *> &Graph::getSelectedEdges() const {
-    return selectedEdges;
-}
-
-void Graph::selectNode(Node &node) {
-    if(!isNodeSelected(&node))
-        selectedNodes.push_back(&node);
-}
-
-void Graph::selectEdge(Edge &edge) {
-    if(!isEdgeSelected(&edge))
-        selectedEdges.push_back(&edge);
-}
-
-/*void Graph::selectNodes() {
-    deselectNodes();
-    for(auto node = nodes.begin(); node != nodes.end(); ++node) {
-        selectedNodes.push_back(&*node);
-    }
-}
-
-void Graph::selectEdges() {
-    deselectEdges();
-    for(auto edge = edges.begin(); edge != edges.end(); ++edge) {
-        selectedEdges.push_back(&*edge);
-    }
-}*/
-
-void Graph::deselectNodes() {
-    selectedNodes.clear();
-}
-
-void Graph::deselectEdges() {
-    selectedEdges.clear();
-}
-
-Node *Graph::getNodeAt(wxPoint pos) {
-    for(auto node = nodes.begin(); node != nodes.end(); ++node) {
-        if( hypot(node->pos.x - pos.x, node->pos.y - pos.y) < node->radius ) {
-            return &*node;
-        }
-    }
-    return nullptr;
 }
 
 Node* Graph::getNodeById(int id){
@@ -68,37 +19,6 @@ Node* Graph::getNodeById(int id){
         if( id == node->id ) {
             return &*node;
         }
-    }
-    return nullptr;
-}
-
-Edge *Graph::getEdgeAt(wxPoint pos) {
-    for(auto edge = edges.begin(); edge != edges.end(); ++edge) {
-        ///test if the point c is inside a pre-defined distance from the line
-        double distance = 0;
-        distance = fabs(double((pos.y - edge->to.pos.y) * edge->from.pos.x -
-                               (pos.x - edge->to.pos.x) * edge->from.pos.y +
-                               (pos.x * edge->to.pos.y) - pos.y * edge->to.pos.x)) /
-                   sqrt(double((pow(pos.y - edge->to.pos.y, 2)) + (pow(pos.x - edge->to.pos.x, 2))));
-
-        if (distance > 10) {
-            continue;
-        }
-
-        ///test if the point c is between a and b
-        int dotproduct = (pos.x - edge->from.pos.x) * (edge->to.pos.x - edge->from.pos.x) +
-                         (pos.y - edge->from.pos.y) * (edge->to.pos.y - edge->from.pos.y);
-        if(dotproduct < 0) {
-            continue;
-        }
-
-        int squaredlengthba = (edge->to.pos.x - edge->from.pos.x) * (edge->to.pos.x - edge->from.pos.x) +
-                              (edge->to.pos.y - edge->from.pos.y) * (edge->to.pos.y - edge->from.pos.y);
-        if(dotproduct > squaredlengthba) {
-            continue;
-        }
-
-        return &*edge;
     }
     return nullptr;
 }
@@ -124,22 +44,6 @@ void Graph::removeEdge(const Edge *edge) {
     edges.remove_if( [edge](const Edge& i) {
         return &i == edge;
     });
-}
-
-bool Graph::isNodeSelected(const Node *node) const {
-    return std::find( std::begin(getSelectedNodes()), std::end(getSelectedNodes()), node) != std::end(getSelectedNodes());
-}
-
-bool Graph::isEdgeSelected(const Edge *edge) const {
-    return std::find( std::begin(getSelectedEdges()), std::end(getSelectedEdges()), edge) != std::end(getSelectedEdges());
-}
-
-bool Graph::hasNodeSelected() const {
-    return !getSelectedNodes().empty();
-}
-
-bool Graph::hasEdgeSelected() const {
-    return !getSelectedEdges().empty();
 }
 
 void Graph::removeAllNodes() {
@@ -177,8 +81,7 @@ Graph::AdjacencyList Graph::getAdjacencyList() {
     return adjacencyList;
 }
 
-std::list<std::pair<int ,int>> Graph::getAdjacentNodes(const Node& node)
-{
+std::list<std::pair<int ,int>> Graph::getAdjacentNodes(const Node& node){
     std::list<std::pair<int ,int>> adjacentNodes;
     for(auto edge: edges)
     {

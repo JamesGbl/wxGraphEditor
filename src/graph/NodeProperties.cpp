@@ -40,5 +40,25 @@ void NodeProperties::showNode(const Node &node) {
 
 void NodeProperties::showEdge(const Edge &edge) {
     DeleteAllItems();
+
+    std::stringstream strStream;
+
+    wxVector<wxVariant> data;
+    data.push_back(wxVariant("Type"));
+    data.push_back(wxVariant("Edge"));
+    AppendItem(data);
+    data.clear();
+    data.push_back(wxVariant("From"));
+    data.push_back(wxVariant(wxString::Format(_("%i"), edge.from.id)));
+    AppendItem(data);
+    data.clear();
+    data.push_back(wxVariant("To"));
+    data.push_back(wxVariant(wxString::Format(_("%i"), edge.to.id)));
+    AppendItem(data);
+    data.clear();
+    data.push_back(wxVariant("Weight"));
+    data.push_back(wxVariant(wxString::Format(_("%i"), edge.weight)));
+    AppendItem(data);
+    data.clear();
 }
 }

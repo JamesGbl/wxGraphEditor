@@ -4,6 +4,7 @@
 #include "../GLPane.hpp"
 #include "Graph.hpp"
 #include "InstrumentsPanel.h"
+#include "NodeProperties.hpp"
 #include <list>
 
 namespace GraphStructure {
@@ -23,14 +24,12 @@ enum class NVSelectedInstrument {
     EDGE_SELECTED
 };
 
-namespace ItemContextMenuID {
-enum {
+enum class ItemContextMenuID : int {
     UNKNOWN = 1,
     CHANGE_IDENTIFIER,
     CHANGE_WEIGTH,
     REMOVE
 };
-}
 
 enum class NVMouseReleaseType {
     DESELECT_NODE,
@@ -40,41 +39,33 @@ enum class NVMouseReleaseType {
 };
 
 class NodeVisualizer : public GLPane {
-  private:
-    //Mouse control
-    wxPoint mouseClickAbsolutePos,
-            mousePreviousAbsolutePos;
-    NVMouseClickType mouseClickType;
-    bool mouseDrag;
-    unsigned short mouseDragInitiationDistance;
-    wxPoint mouseCurrentPos;
-    wxPoint mouseStartPos;
-    //View
-    float x, y;
-    float scale;
-    float minScale;
-    float maxScale;
-    bool drawingEdge = false;
-
-
-    //Data
   public:
     Graph &graph;
+    NodeProperties &nodeInfo;
+    NodeVisualizer(wxFrame *parent, Graph &graph, NodeProperties &nodeInfo);
 
-  private:
-    wxMenu *contextMenuNode;
+    std::list<Edge *> selectedEdges;
+    std::list<Node *> selectedNodes;
 
-    wxDECLARE_EVENT_TABLE();
+    const std::list<Node *> &getSelectedNodes() const;
+    const std::list<Edge *> &getSelectedEdges() const;
 
-  protected:
+    void selectNode(Node &node);
+    void selectEdge(Edge &edge);
+    void deselectNodes();
+    void deselectEdges();
+
     Node *getNodeAt(wxPoint pos);
+    Edge *getEdgeAt(wxPoint pos);
+    bool isNodeSelected(const Node *node) const;
+    bool isEdgeSelected(const Edge *edge) const;
+    bool hasNodeSelected() const;
+    bool hasEdgeSelected() const;
 
-  public:
-    NodeVisualizer(wxFrame *parent, Graph &graph);
-    virtual ~NodeVisualizer();
+    void render(wxPaintEvent &event);
+    void renderTempEdge();
 
     NVSelectedInstrument selectedItem = NVSelectedInstrument::NODE_SELECTED;
-    void render(wxPaintEvent &event);
 
     void onMouseMove(wxMouseEvent &event);
     void onMouseDClick(wxMouseEvent &event);
@@ -88,17 +79,32 @@ class NodeVisualizer : public GLPane {
     void onKeyUp(wxKeyEvent &event);
     void onContextMenu(wxContextMenuEvent &event);
 
-    void moveView(float x, float y);
-
     wxPoint getMouseEventPosition(wxMouseEvent &event)const;
     wxPoint getMouseEventAbsolutePosition(wxMouseEvent &event)const;
 
-    void renderTempEdge();
-
+    void moveView(float x, float y);
     void zoomIn(float scaling, wxPoint center);
     void zoomOut(float scaling, wxPoint center);
 
-    Edge getMinEdge(Node& from);
-    void primAlgorithm();
+    virtual ~NodeVisualizer();
+  private:
+    //Mouse control
+    NVMouseClickType mouseClickType;
+
+    wxPoint mouseClickAbsolutePos,
+            mousePreviousAbsolutePos;
+    bool mouseDrag;
+    unsigned short mouseDragInitiationDistance;
+    wxPoint mouseCurrentPos, mouseStartPos;
+
+    //View
+    float x, y;
+    float scale;
+    float minScale;
+    float maxScale;
+    bool drawingEdge = false;
+    wxMenu *contextMenuNode;
+
+    wxDECLARE_EVENT_TABLE();
 };
 }

@@ -31,7 +31,7 @@ void PrimAlgorithm::operator()(GraphStructure::Graph &graph)
         queue.pop();
 
         if(!included[minKeyNode])
-            graph.selectNode(*graph.getNodeById(minKeyNode));
+            //selectNode(*graph.getNodeById(minKeyNode));
 
         included[minKeyNode] = true;
         if (parent[minKeyNode] != -1)
@@ -40,7 +40,7 @@ void PrimAlgorithm::operator()(GraphStructure::Graph &graph)
                 if((edge.from.id == minKeyNode && edge.to.id == parent[minKeyNode]) ||
                    (edge.to.id == minKeyNode && edge.from.id == parent[minKeyNode])){
                     GraphStructure::Edge *tempEdge = const_cast<Edge*>(&edge);
-                    graph.selectEdge(*tempEdge);
+                    //selectEdge(*tempEdge);
                 }
             }
         }
