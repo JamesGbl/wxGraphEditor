@@ -169,7 +169,7 @@ void Graph::connect(Node &from, Node &to, int weight) {
 
 Graph::AdjacencyList Graph::getAdjacencyList() {
     AdjacencyList adjacencyList;
-    for(int nodeIndex = 0; nodeIndex < nodes.size(); nodeIndex++)
+    for(size_t nodeIndex = 0; nodeIndex < nodes.size(); nodeIndex++)
     {
         std::list<std::pair<int ,int>> adjacentNodes = getAdjacentNodes(*getNodeById(nodeIndex));
         adjacencyList.emplace(nodeIndex, adjacentNodes);
