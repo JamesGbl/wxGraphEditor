@@ -21,8 +21,8 @@ union WindowViewContainer {
     wxWindow *views[WindowViews::length];
     struct {
         InstrumentsPanel *InstrumentsPanel;
-        NodeVisualizer *nodeVisualizer;
-        NodeProperties *nodeProperties;
+        NodeVisualizer   *nodeVisualizer;
+        NodeProperties   *nodeProperties;
     };
 };
 }

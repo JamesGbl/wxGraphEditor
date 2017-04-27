@@ -12,24 +12,9 @@ static bool point_insideRadius(wxPoint a, wxPoint b, float radius) {
 }
 
 namespace GraphStructure {
-
-wxBEGIN_EVENT_TABLE(NodeVisualizer, GLPane)
-    EVT_MOTION      (NodeVisualizer::onMouseMove)
-    EVT_LEFT_DCLICK (NodeVisualizer::onMouseDClick)
-    EVT_LEFT_DOWN   (NodeVisualizer::onMouseLeftDown)
-    EVT_LEFT_UP     (NodeVisualizer::onMouseLeftUp)
-    EVT_RIGHT_DOWN  (NodeVisualizer::onMouseRightDown)
-    EVT_RIGHT_UP    (NodeVisualizer::onMouseRightUp)
-    EVT_LEAVE_WINDOW(NodeVisualizer::onMouseLeaveWindow)
-    EVT_KEY_DOWN    (NodeVisualizer::onKeyDown)
-    EVT_KEY_UP      (NodeVisualizer::onKeyUp)
-    EVT_MOUSEWHEEL  (NodeVisualizer::onMouseWheel)
-    EVT_CONTEXT_MENU(NodeVisualizer::onContextMenu)
-wxEND_EVENT_TABLE()
-
 NodeVisualizer::NodeVisualizer(wxFrame *parent, Graph &graph, NodeProperties &nodeInfo):
-    GLPane(parent), mouseDrag(false), mouseDragInitiationDistance(8), x(0.0f),
-    y(0.0f), scale(1.0f), minScale(0.25f), maxScale(4), graph(graph), nodeInfo(nodeInfo) {
+    GLPane(parent), graph(graph), nodeInfo(nodeInfo), mouseDrag(false), mouseDragInitiationDistance(8), x(0.0f),
+    y(0.0f), scale(1.0f), minScale(0.25f), maxScale(4) {
     contextMenuNode = new wxMenu;
 
     contextMenuNode->Append((int)ItemContextMenuID::UNKNOWN, "<Node>")->Enable(false);
@@ -37,6 +22,17 @@ NodeVisualizer::NodeVisualizer(wxFrame *parent, Graph &graph, NodeProperties &no
     contextMenuNode->Append((int)ItemContextMenuID::CHANGE_IDENTIFIER, "Change identifier");
     contextMenuNode->AppendSeparator();
     contextMenuNode->Append((int)ItemContextMenuID::REMOVE, "Remove");
+
+    Connect(wxEVT_LEFT_DOWN, wxMouseEventHandler(NodeVisualizer::onMouseLeftDown), NULL, this );
+    Connect(wxEVT_LEFT_UP, wxMouseEventHandler(NodeVisualizer::onMouseLeftUp), NULL, this );
+    Connect(wxEVT_LEFT_DCLICK, wxMouseEventHandler(NodeVisualizer::onMouseDClick), NULL, this );
+    Connect(wxEVT_MOTION, wxMouseEventHandler(NodeVisualizer::onMouseMove), NULL, this );
+    Connect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(NodeVisualizer::onMouseRightDown), NULL, this );
+    Connect(wxEVT_RIGHT_UP, wxMouseEventHandler(NodeVisualizer::onMouseRightUp), NULL, this );
+    Connect(wxEVT_MOUSEWHEEL, wxMouseEventHandler(NodeVisualizer::onMouseWheel), NULL, this );
+    Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(NodeVisualizer::onKeyDown), NULL, this );
+    Connect(wxEVT_KEY_UP, wxKeyEventHandler(NodeVisualizer::onKeyUp), NULL, this );
+    Connect(wxEVT_CONTEXT_MENU, wxContextMenuEventHandler(NodeVisualizer::onContextMenu), NULL, this );
 }
 
 NodeVisualizer::~NodeVisualizer() {
@@ -180,9 +176,11 @@ void NodeVisualizer::onMouseRightDown(wxMouseEvent &event) {
     auto node = getNodeAt(mouseClickPos);
     if(node) {
         PopupMenu(contextMenuNode);
-    } else {
-        event.Skip();
+        selectNode(*node);
     }
+
+    Refresh();
+    event.Skip();
 }
 
 void NodeVisualizer::onMouseRightUp(wxMouseEvent &event) {
@@ -201,10 +199,6 @@ void NodeVisualizer::onMouseWheel(wxMouseEvent &event) {
     event.Skip();
 }
 
-void NodeVisualizer::onMouseLeaveWindow(wxMouseEvent &event) {
-    event.Skip();
-}
-
 void NodeVisualizer::onKeyDown(wxKeyEvent &event) {
     switch(event.GetKeyCode()) {
         case WXK_SPACE:
@@ -213,7 +207,6 @@ void NodeVisualizer::onKeyDown(wxKeyEvent &event) {
                 Refresh();
             }
             break;
-
         case WXK_DELETE:
             if(hasNodeSelected()) {
                 for(auto node = getSelectedNodes().begin(); node != getSelectedNodes().end(); ++node) {
@@ -225,30 +218,27 @@ void NodeVisualizer::onKeyDown(wxKeyEvent &event) {
                     graph.removeEdge(*edge);
                 }
             }
-
             deselectNodes();
 
             break;
-
-        default: {
-                auto chr = event.GetUnicodeKey();
-
-                if(chr == 'I') {
-                    if(hasNodeSelected() == true) {
-                        auto node = getSelectedNodes().begin();
-                        wxString newLabel = wxGetTextFromUser(_T("Enter node label:"), _T("Label"));
-                        (*node)->label = newLabel;
-                        Refresh();
-                    }
-                    if(hasEdgeSelected() == true) {
-                        auto edge = getSelectedEdges().begin();
-                        int newWeight = wxAtoi(wxGetTextFromUser(_T("Enter edge weight:"), _T("Weight")));
-                        (*edge)->weight = newWeight;
-                        Refresh();
-                    }
+        case 'I': {
+                if(hasNodeSelected() == true) {
+                    auto node = getSelectedNodes().begin();
+                    wxString newLabel = wxGetTextFromUser(_T("Enter node label:"), _T("Label"));
+                    (*node)->label = newLabel;
+                    Refresh();
                 }
-                break;
+                if(hasEdgeSelected() == true) {
+                    auto edge = getSelectedEdges().begin();
+                    int newWeight = wxAtoi(wxGetTextFromUser(_T("Enter edge weight:"), _T("Weight")));
+                    (*edge)->weight = newWeight;
+                    Refresh();
+                }
             }
+            break;
+
+        default:
+            break;
     }
 
     event.Skip();

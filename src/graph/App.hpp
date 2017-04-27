@@ -10,7 +10,7 @@
 
 namespace GraphStructure {
 
-class App : public wxApp{
+class App : public wxApp {
   public:
     virtual bool OnInit();
 };

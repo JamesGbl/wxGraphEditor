@@ -15,7 +15,7 @@ class Graph {
     std::list<Edge> edges;
 
   public:
-    typedef std::map<int, std::list<std::pair<int ,int>>> AdjacencyList;
+    typedef std::map<int, std::list<std::pair<int, int>>> AdjacencyList;
 
     std::list<Node> &getNodes();
     std::list<Edge> &getEdges();
@@ -28,8 +28,8 @@ class Graph {
 
     virtual void connect(Node &from, Node &to, int weight = 1);
     AdjacencyList getAdjacencyList();
-    std::list<std::pair<int ,int>> getAdjacentNodes(const Node& node);
+    std::list<std::pair<int, int>> getAdjacentNodes(const Node &node);
 
-    Node* getNodeById(int id);
+    Node *getNodeById(int id);
 };
 }

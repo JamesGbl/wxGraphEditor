@@ -74,7 +74,6 @@ class NodeVisualizer : public GLPane {
     void onMouseRightDown(wxMouseEvent &event);
     void onMouseRightUp(wxMouseEvent &event);
     void onMouseWheel(wxMouseEvent &event);
-    void onMouseLeaveWindow(wxMouseEvent &event);
     void onKeyDown(wxKeyEvent &event);
     void onKeyUp(wxKeyEvent &event);
     void onContextMenu(wxContextMenuEvent &event);
@@ -104,7 +103,5 @@ class NodeVisualizer : public GLPane {
     float maxScale;
     bool drawingEdge = false;
     wxMenu *contextMenuNode;
-
-    wxDECLARE_EVENT_TABLE();
 };
 }

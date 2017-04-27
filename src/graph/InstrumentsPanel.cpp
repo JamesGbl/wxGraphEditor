@@ -33,13 +33,13 @@ InstrumentsPanel::InstrumentsPanel(wxFrame *parent, NodeVisualizer *nv) :
         prim(nv->graph);
     });
     adjacencyListButton->Bind(wxEVT_BUTTON, [=](wxCommandEvent &) {
-        std::map<int, std::list<std::pair<int ,int>>> adjList = nv->graph.getAdjacencyList();
+        std::map<int, std::list<std::pair<int, int>>> adjList = nv->graph.getAdjacencyList();
         wxString adjListStr;
-        for(auto node: nv->graph.getNodes()){
+        for(auto node: nv->graph.getNodes()) {
             adjListStr += wxString::Format(_("%i: {"), node.id);
-            for(auto adjacent: adjList[node.id]){
-                    adjListStr += wxString::Format(_("id%i "), adjacent.second);
-                }
+            for(auto adjacent: adjList[node.id]) {
+                adjListStr += wxString::Format(_("id%i "), adjacent.second);
+            }
             adjListStr += _("} ");
         }
         wxGetTextFromUser(_T("Enter node label:"), _T("Label"), adjListStr);

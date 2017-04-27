@@ -14,7 +14,7 @@ std::list<Edge> &Graph::getEdges() {
     return edges;
 }
 
-Node* Graph::getNodeById(int id){
+Node *Graph::getNodeById(int id) {
     for(auto node = nodes.begin(); node != nodes.end(); ++node) {
         if( id == node->id ) {
             return &*node;
@@ -61,7 +61,7 @@ void Graph::connect(Node &from, Node &to, int weight) {
 
     for(auto edge: getEdges()) {
         if((&(edge.from) == &from && &(edge.to) == &to) ||
-           (&(edge.to) == &from && &(edge.from) == &to)) {
+                (&(edge.to) == &from && &(edge.from) == &to)) {
             return;
         }
     }
@@ -73,24 +73,21 @@ void Graph::connect(Node &from, Node &to, int weight) {
 
 Graph::AdjacencyList Graph::getAdjacencyList() {
     AdjacencyList adjacencyList;
-    for(size_t nodeIndex = 0; nodeIndex < nodes.size(); nodeIndex++)
-    {
-        std::list<std::pair<int ,int>> adjacentNodes = getAdjacentNodes(*getNodeById(nodeIndex));
+    for(size_t nodeIndex = 0; nodeIndex < nodes.size(); nodeIndex++) {
+        std::list<std::pair<int, int>> adjacentNodes = getAdjacentNodes(*getNodeById(nodeIndex));
         adjacencyList.emplace(nodeIndex, adjacentNodes);
     }
     return adjacencyList;
 }
 
-std::list<std::pair<int ,int>> Graph::getAdjacentNodes(const Node& node){
-    std::list<std::pair<int ,int>> adjacentNodes;
-    for(auto edge: edges)
-    {
-        std::pair<int ,int> adjacent;
-        if (node.id == edge.from.id){
+std::list<std::pair<int, int>> Graph::getAdjacentNodes(const Node &node) {
+    std::list<std::pair<int, int>> adjacentNodes;
+    for(auto edge: edges) {
+        std::pair<int, int> adjacent;
+        if (node.id == edge.from.id) {
             adjacent.second = edge.to.id;
             adjacent.first = edge.weight;
-        }
-        else if(node.id == edge.to.id){
+        } else if(node.id == edge.to.id) {
             adjacent.second = edge.from.id;
             adjacent.first = edge.weight;
         } else {

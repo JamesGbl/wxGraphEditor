@@ -29,7 +29,7 @@ wxEND_EVENT_TABLE()
 Frame::Frame(const wxSize &windowSize) :
     wxFrame(NULL, wxID_ANY, wxT(APP_NAME), wxDefaultPosition, windowSize) {
     viewContainer.nodeProperties = new NodeProperties(this);
-    viewContainer.nodeVisualizer = new NodeVisualizer(this, *graph, *viewContainer.nodeProperties);
+        viewContainer.nodeVisualizer = new NodeVisualizer(this, *graph, *viewContainer.nodeProperties);
     viewContainer.InstrumentsPanel = new InstrumentsPanel(this, viewContainer.nodeVisualizer);
 
     wxMenuBar *mbar = new wxMenuBar();

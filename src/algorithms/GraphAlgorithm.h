@@ -3,10 +3,9 @@
 
 using namespace GraphStructure;
 
-class GraphAlgorithm
-{
-    public:
-        GraphAlgorithm(){};
+class GraphAlgorithm {
+  public:
+    GraphAlgorithm() {};
 
-        virtual void operator() (GraphStructure::Graph &graph) = 0;
+    virtual void operator() (GraphStructure::Graph &graph) = 0;
 };
