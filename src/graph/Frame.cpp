@@ -83,6 +83,7 @@ void Frame::setupLayout() {
 void Frame::onNew(wxCommandEvent &event) {
     graph->removeAllEdges();
     graph->removeAllNodes();
+    Refresh();
 }
 
 void Frame::onOpen(wxCommandEvent &WXUNUSED(event)) {

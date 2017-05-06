@@ -183,10 +183,6 @@ void NodeVisualizer::onMouseRightDown(wxMouseEvent &event) {
     event.Skip();
 }
 
-void NodeVisualizer::onMouseRightUp(wxMouseEvent &event) {
-    event.Skip();
-}
-
 void NodeVisualizer::onMouseWheel(wxMouseEvent &event) {
     if(event.GetWheelAxis() == wxMOUSE_WHEEL_VERTICAL) {
         if(event.GetWheelRotation() > 0)
@@ -219,6 +215,7 @@ void NodeVisualizer::onKeyDown(wxKeyEvent &event) {
                 }
             }
             deselectNodes();
+            Refresh();
 
             break;
         case 'I': {
@@ -226,25 +223,20 @@ void NodeVisualizer::onKeyDown(wxKeyEvent &event) {
                     auto node = getSelectedNodes().begin();
                     wxString newLabel = wxGetTextFromUser(_T("Enter node label:"), _T("Label"));
                     (*node)->label = newLabel;
-                    Refresh();
                 }
                 if(hasEdgeSelected() == true) {
                     auto edge = getSelectedEdges().begin();
                     int newWeight = wxAtoi(wxGetTextFromUser(_T("Enter edge weight:"), _T("Weight")));
                     (*edge)->weight = newWeight;
-                    Refresh();
                 }
             }
+            Refresh();
             break;
 
         default:
             break;
     }
 
-    event.Skip();
-}
-
-void NodeVisualizer::onKeyUp(wxKeyEvent &event) {
     event.Skip();
 }
 

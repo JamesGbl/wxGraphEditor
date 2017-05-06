@@ -22,8 +22,8 @@ void Edge::render(bool selected) const {
     glEnd();
     constexpr unsigned short arrowSize = 15;
     const float angle = atan2(to.pos.y - from.pos.y, to.pos.x - from.pos.x);
-    /*
 
+    /*Arrow
     const wxPoint head(
         to.pos.x - arrowSize*cosf(angle)/2.,
         to.pos.y - arrowSize*sinf(angle)/2.

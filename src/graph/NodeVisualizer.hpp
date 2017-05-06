@@ -72,10 +72,8 @@ class NodeVisualizer : public GLPane {
     void onMouseLeftDown(wxMouseEvent &event);
     void onMouseLeftUp(wxMouseEvent &event);
     void onMouseRightDown(wxMouseEvent &event);
-    void onMouseRightUp(wxMouseEvent &event);
     void onMouseWheel(wxMouseEvent &event);
     void onKeyDown(wxKeyEvent &event);
-    void onKeyUp(wxKeyEvent &event);
     void onContextMenu(wxContextMenuEvent &event);
 
     wxPoint getMouseEventPosition(wxMouseEvent &event)const;
