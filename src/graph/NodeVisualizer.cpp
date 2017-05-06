@@ -26,16 +26,14 @@ NodeVisualizer::NodeVisualizer(wxFrame *parent, Graph &graph, NodeProperties &no
     contextMenuNode->AppendSeparator();
     contextMenuNode->Append((int)ItemContextMenuID::REMOVE, "Remove");
 
-    Connect(wxEVT_LEFT_DOWN, wxMouseEventHandler(NodeVisualizer::onMouseLeftDown), NULL, this );
-    Connect(wxEVT_LEFT_UP, wxMouseEventHandler(NodeVisualizer::onMouseLeftUp), NULL, this );
-    Connect(wxEVT_LEFT_DCLICK, wxMouseEventHandler(NodeVisualizer::onMouseDClick), NULL, this );
-    Connect(wxEVT_MOTION, wxMouseEventHandler(NodeVisualizer::onMouseMove), NULL, this );
-    Connect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(NodeVisualizer::onMouseRightDown), NULL, this );
-    Connect(wxEVT_RIGHT_UP, wxMouseEventHandler(NodeVisualizer::onMouseRightUp), NULL, this );
-    Connect(wxEVT_MOUSEWHEEL, wxMouseEventHandler(NodeVisualizer::onMouseWheel), NULL, this );
-    Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(NodeVisualizer::onKeyDown), NULL, this );
-    Connect(wxEVT_KEY_UP, wxKeyEventHandler(NodeVisualizer::onKeyUp), NULL, this );
-    Connect(wxEVT_CONTEXT_MENU, wxContextMenuEventHandler(NodeVisualizer::onContextMenu), NULL, this );
+    Bind(wxEVT_LEFT_DOWN, &NodeVisualizer::onMouseLeftDown, this);
+    Bind(wxEVT_LEFT_UP, &NodeVisualizer::onMouseLeftUp, this);
+    Bind(wxEVT_LEFT_DCLICK, &NodeVisualizer::onMouseDClick, this);
+    Bind(wxEVT_MOTION, &NodeVisualizer::onMouseMove, this);
+    Bind(wxEVT_RIGHT_DOWN, &NodeVisualizer::onMouseRightDown, this);
+    Bind(wxEVT_MOUSEWHEEL, &NodeVisualizer::onMouseWheel, this);
+    Bind(wxEVT_KEY_DOWN, &NodeVisualizer::onKeyDown, this);
+    Bind(wxEVT_CONTEXT_MENU, &NodeVisualizer::onContextMenu, this);
     Bind(wxEVT_TIMER, &NodeVisualizer::dispatchActionList, this);
 
     m_timer->Start(500);
