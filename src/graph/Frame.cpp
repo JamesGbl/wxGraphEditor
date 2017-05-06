@@ -123,7 +123,7 @@ void Frame::onOpen(wxCommandEvent &WXUNUSED(event)) {
             while (graphEdge) {
                 graph->connect(*(graph->getNodeById(wxAtoi(graphEdge->GetAttribute(_("from"))))),
                                    *(graph->getNodeById(wxAtoi(graphEdge->GetAttribute(_("to"))))),
-                                   wxAtoi(graphEdge->GetAttribute(_("weight"))));
+                                   wxAtoi(graphEdge->GetAttribute(_("weight"))), wxAtoi(graphEdge->GetAttribute(_("id"))));
                 graphEdge = graphEdge->GetNext();
             }
         }
@@ -165,6 +165,7 @@ void Frame::saveGraph(wxString path){
         edge->AddAttribute("from", wxString::Format(_("%i"), graphEdge.from.id));
         edge->AddAttribute("to", wxString::Format(_("%i"), graphEdge.to.id));
         edge->AddAttribute("weight", wxString::Format(_("%i"), graphEdge.weight));
+        edge->AddAttribute("id", wxString::Format(_("%i"), graphEdge.id));
     }
 
     wxXmlNode *nodes = new wxXmlNode (root, wxXML_ELEMENT_NODE, _("Nodes"));

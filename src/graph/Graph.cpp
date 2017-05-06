@@ -23,6 +23,15 @@ Node *Graph::getNodeById(int id) {
     return nullptr;
 }
 
+Edge *Graph::getEdgeById(int id) {
+    for(auto edge = edges.begin(); edge != edges.end(); ++edge) {
+        if( id == edge->id ) {
+            return &*edge;
+        }
+    }
+    return nullptr;
+}
+
 void Graph::addNode(Node node, int id) {
     if(id == -1)
         node.id = nodes.size();
@@ -54,7 +63,7 @@ void Graph::removeAllEdges() {
     edges.clear();
 }
 
-void Graph::connect(Node &from, Node &to, int weight) {
+void Graph::connect(Node &from, Node &to, int weight, int id) {
     if(&from == &to) {
         return;
     }
@@ -65,10 +74,15 @@ void Graph::connect(Node &from, Node &to, int weight) {
             return;
         }
     }
-    edges.push_back(Edge(from, to, weight));
 
-    from.connections.push_back(to);
-    to.connections.push_back(from);
+    if(id == std::numeric_limits<int>::min()){
+        Edge newEdge(from, to, weight, -edges.size()-1);
+        edges.push_back(newEdge);
+    }
+    else {
+        Edge newEdge(from, to, weight, id);
+        edges.push_back(newEdge);
+    }
 }
 
 Graph::AdjacencyList Graph::getAdjacencyList() {

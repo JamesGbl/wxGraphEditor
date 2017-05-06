@@ -26,10 +26,11 @@ class Graph {
     void removeAllNodes();
     void removeAllEdges();
 
-    virtual void connect(Node &from, Node &to, int weight = 1);
+    virtual void connect(Node &from, Node &to, int weight = 1, int id = std::numeric_limits<int>::min());
     AdjacencyList getAdjacencyList();
     std::list<std::pair<int, int>> getAdjacentNodes(const Node &node);
 
     Node *getNodeById(int id);
+    Edge *getEdgeById(int id);
 };
 }

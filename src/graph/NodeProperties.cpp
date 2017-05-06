@@ -60,5 +60,9 @@ void NodeProperties::showEdge(const Edge &edge) {
     data.push_back(wxVariant(wxString::Format(_("%i"), edge.weight)));
     AppendItem(data);
     data.clear();
+    data.push_back(wxVariant("ID"));
+    data.push_back(wxVariant(wxString::Format(_("%i"), edge.id)));
+    AppendItem(data);
+    data.clear();
 }
 }

@@ -6,8 +6,8 @@
 #include <GL/glut.h>
 
 namespace GraphStructure {
-Edge::Edge(Node &from, Node &to, int weight):
-    from(from), to(to), weight(weight) {}
+Edge::Edge(Node &from, Node &to, int weight, int id):
+    from(from), to(to), weight(weight), id(id) {}
 
 void Edge::render(bool selected) const {
     glLineWidth(4);
