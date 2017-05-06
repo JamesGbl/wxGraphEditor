@@ -37,9 +37,9 @@ std::vector<int> PrimAlgorithm::execute(GraphStructure::Graph &graph) {
         if (parent[minKeyNode] != -1) {
             for(auto&& edge: graph.getEdges()) {
                 if((edge.from.id == minKeyNode && edge.to.id == parent[minKeyNode]) ||
-                   (edge.to.id == minKeyNode && edge.from.id == parent[minKeyNode])) {
-                        GraphStructure::Edge *tempEdge = const_cast<Edge*>(&edge);
-                        actionList.push_back(tempEdge->id);
+                        (edge.to.id == minKeyNode && edge.from.id == parent[minKeyNode])) {
+                    GraphStructure::Edge *tempEdge = const_cast<Edge *>(&edge);
+                    actionList.push_back(tempEdge->id);
                 }
             }
         }

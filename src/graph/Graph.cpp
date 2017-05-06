@@ -75,11 +75,10 @@ void Graph::connect(Node &from, Node &to, int weight, int id) {
         }
     }
 
-    if(id == std::numeric_limits<int>::min()){
+    if(id == std::numeric_limits<int>::min()) {
         Edge newEdge(from, to, weight, -edges.size()-1);
         edges.push_back(newEdge);
-    }
-    else {
+    } else {
         Edge newEdge(from, to, weight, id);
         edges.push_back(newEdge);
     }

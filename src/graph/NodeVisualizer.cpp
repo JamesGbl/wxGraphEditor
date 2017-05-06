@@ -413,18 +413,18 @@ void NodeVisualizer::setActions(std::vector<int> actions) {
     this->algorithmStarted = true;
 }
 
-void NodeVisualizer::dispatchActionList(wxTimerEvent& event) {
-    if(algorithmStarted){
+void NodeVisualizer::dispatchActionList(wxTimerEvent &event) {
+    if(algorithmStarted) {
         static size_t elementNumber = 0;
-        if(elementNumber == actions.size()){
+        if(elementNumber == actions.size()) {
             algorithmStarted = false;
             elementNumber = 0;
             return;
         }
 
-        if(graph.getNodeById(getAction(elementNumber))){
+        if(graph.getNodeById(getAction(elementNumber))) {
             selectNode(*graph.getNodeById(getAction(elementNumber)));
-        } else if(graph.getEdgeById(getAction(elementNumber))){
+        } else if(graph.getEdgeById(getAction(elementNumber))) {
             selectEdge(*graph.getEdgeById(getAction(elementNumber)));
         }
         elementNumber++;

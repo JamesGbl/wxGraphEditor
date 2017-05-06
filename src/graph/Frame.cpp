@@ -29,7 +29,7 @@ wxEND_EVENT_TABLE()
 Frame::Frame(const wxSize &windowSize) :
     wxFrame(NULL, wxID_ANY, wxT(APP_NAME), wxDefaultPosition, windowSize) {
     viewContainer.nodeProperties = new NodeProperties(this);
-        viewContainer.nodeVisualizer = new NodeVisualizer(this, *graph, *viewContainer.nodeProperties);
+    viewContainer.nodeVisualizer = new NodeVisualizer(this, *graph, *viewContainer.nodeProperties);
     viewContainer.InstrumentsPanel = new InstrumentsPanel(this, viewContainer.nodeVisualizer);
 
     wxMenuBar *mbar = new wxMenuBar();
@@ -113,9 +113,9 @@ void Frame::onOpen(wxCommandEvent &WXUNUSED(event)) {
             wxXmlNode *graphNode = graphItem->GetChildren();
             while (graphNode) {
                 graph->addNode(Node(wxPoint(wxAtoi(graphNode->GetAttribute(_("posX"))),
-                                                wxAtoi(graphNode->GetAttribute(_("posY")))),
+                                            wxAtoi(graphNode->GetAttribute(_("posY")))),
                                     graphNode->GetAttribute(_("label"))),
-                                    wxAtoi(graphNode->GetAttribute(_("id"))));
+                               wxAtoi(graphNode->GetAttribute(_("id"))));
                 graphNode = graphNode->GetNext();
             }
 
@@ -123,8 +123,8 @@ void Frame::onOpen(wxCommandEvent &WXUNUSED(event)) {
             wxXmlNode *graphEdge = graphItem->GetChildren();
             while (graphEdge) {
                 graph->connect(*(graph->getNodeById(wxAtoi(graphEdge->GetAttribute(_("from"))))),
-                                   *(graph->getNodeById(wxAtoi(graphEdge->GetAttribute(_("to"))))),
-                                   wxAtoi(graphEdge->GetAttribute(_("weight"))), wxAtoi(graphEdge->GetAttribute(_("id"))));
+                               *(graph->getNodeById(wxAtoi(graphEdge->GetAttribute(_("to"))))),
+                               wxAtoi(graphEdge->GetAttribute(_("weight"))), wxAtoi(graphEdge->GetAttribute(_("id"))));
                 graphEdge = graphEdge->GetNext();
             }
         }
@@ -134,7 +134,7 @@ void Frame::onOpen(wxCommandEvent &WXUNUSED(event)) {
 }
 
 void Frame::onSave(wxCommandEvent &event) {
-    if(filePath.IsEmpty()){
+    if(filePath.IsEmpty()) {
         onSaveAs(event);
         return;
     }
@@ -154,7 +154,7 @@ void Frame::onSaveAs(wxCommandEvent &WXUNUSED(event)) {
     saved = true;
 }
 
-void Frame::saveGraph(wxString path){
+void Frame::saveGraph(wxString path) {
     wxXmlDocument graphXML;
 
     wxXmlNode *root = new wxXmlNode(NULL, wxXML_ELEMENT_NODE, _("Graph"));

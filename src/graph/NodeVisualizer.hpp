@@ -84,10 +84,14 @@ class NodeVisualizer : public GLPane {
     void zoomIn(float scaling, wxPoint center);
     void zoomOut(float scaling, wxPoint center);
 
-    void dispatchActionList(wxTimerEvent& event);
+    void dispatchActionList(wxTimerEvent &event);
     void setActions(std::vector<int> actions);
-    int getAction(int id) { return actions[id]; };
-    std::vector<int> getActions() { return actions; };
+    int getAction(int id) {
+        return actions[id];
+    };
+    std::vector<int> getActions() {
+        return actions;
+    };
 
     virtual ~NodeVisualizer();
   private:
@@ -108,7 +112,7 @@ class NodeVisualizer : public GLPane {
     bool drawingEdge = false;
     wxMenu *contextMenuNode;
 
-    wxTimer* m_timer;
+    wxTimer *m_timer;
     std::vector<int> actions;
     bool algorithmStarted = false;
 };

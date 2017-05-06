@@ -28,7 +28,7 @@ void glLineRect(float x1, float y1, float x2, float y2) {
 }
 
 ///Source: http://slabode.exofire.net/circle_draw.shtml
-void glCircle(float x, float y, float radius, int num_segments, bool filled){
+void glCircle(float x, float y, float radius, int num_segments, bool filled) {
     float theta = 2.0f * 3.1415926f / float(num_segments);
     float c = cosf(theta);
     float s = sinf(theta);
@@ -38,7 +38,7 @@ void glCircle(float x, float y, float radius, int num_segments, bool filled){
     float py = 0;
 
     glBegin(filled ? GL_POLYGON : GL_LINE_LOOP);
-    for(int ii = 0; ii < num_segments; ++ii){
+    for(int ii = 0; ii < num_segments; ++ii) {
         glVertex2f(px + x, py + y);
         t = px;
         px = c*px - s*py;
