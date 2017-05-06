@@ -14,7 +14,6 @@ class Node {
 
     int id;
 
-    std::list<Node> connections;
     std::list<Edge> edgeConnections;
     unsigned int radius;
 
