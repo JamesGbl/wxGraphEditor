@@ -415,7 +415,7 @@ void NodeVisualizer::setActions(std::vector<int> actions) {
 
 void NodeVisualizer::dispatchActionList(wxTimerEvent& event) {
     if(algorithmStarted){
-        static int elementNumber = 0;
+        static size_t elementNumber = 0;
         if(elementNumber == actions.size()){
             algorithmStarted = false;
             elementNumber = 0;
