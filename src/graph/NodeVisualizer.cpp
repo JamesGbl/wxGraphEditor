@@ -17,6 +17,9 @@ NodeVisualizer::NodeVisualizer(wxFrame *parent, Graph &graph, NodeProperties &no
     y(0.0f), scale(1.0f), minScale(0.25f), maxScale(4) {
     contextMenuNode = new wxMenu;
 
+    m_timer = new wxTimer();
+    m_timer->SetOwner(this);
+
     contextMenuNode->Append((int)ItemContextMenuID::UNKNOWN, "<Node>")->Enable(false);
     contextMenuNode->AppendSeparator();
     contextMenuNode->Append((int)ItemContextMenuID::CHANGE_IDENTIFIER, "Change identifier");
@@ -33,6 +36,9 @@ NodeVisualizer::NodeVisualizer(wxFrame *parent, Graph &graph, NodeProperties &no
     Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(NodeVisualizer::onKeyDown), NULL, this );
     Connect(wxEVT_KEY_UP, wxKeyEventHandler(NodeVisualizer::onKeyUp), NULL, this );
     Connect(wxEVT_CONTEXT_MENU, wxContextMenuEventHandler(NodeVisualizer::onContextMenu), NULL, this );
+    Bind(wxEVT_TIMER, &NodeVisualizer::dispatchActionList, this);
+
+    m_timer->Start(500);
 }
 
 NodeVisualizer::~NodeVisualizer() {
@@ -401,6 +407,31 @@ bool NodeVisualizer::hasNodeSelected() const {
 
 bool NodeVisualizer::hasEdgeSelected() const {
     return !getSelectedEdges().empty();
+}
+
+void NodeVisualizer::setActions(std::vector<int> actions) {
+    this->actions.clear();
+    this->actions = actions;
+    this->algorithmStarted = true;
+}
+
+void NodeVisualizer::dispatchActionList(wxTimerEvent& event) {
+    if(algorithmStarted){
+        static int elementNumber = 0;
+        if(elementNumber == actions.size()){
+            algorithmStarted = false;
+            elementNumber = 0;
+            return;
+        }
+
+        if(graph.getNodeById(getAction(elementNumber))){
+            selectNode(*graph.getNodeById(getAction(elementNumber)));
+        } else if(graph.getEdgeById(getAction(elementNumber))){
+            selectEdge(*graph.getEdgeById(getAction(elementNumber)));
+        }
+        elementNumber++;
+        Refresh();
+    }
 }
 
 }

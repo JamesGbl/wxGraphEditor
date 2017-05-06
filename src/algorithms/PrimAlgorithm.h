@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "GraphAlgorithm.h"
 
 class PrimAlgorithm : public GraphAlgorithm {
@@ -6,5 +7,5 @@ class PrimAlgorithm : public GraphAlgorithm {
     PrimAlgorithm() {};
     ~PrimAlgorithm() {};
 
-    void operator() (GraphStructure::Graph &graph);
+    std::vector<int> execute (GraphStructure::Graph &graph);
 };

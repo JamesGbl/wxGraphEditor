@@ -30,7 +30,7 @@ InstrumentsPanel::InstrumentsPanel(wxFrame *parent, NodeVisualizer *nv) :
     });
     algorithmButton->Bind(wxEVT_BUTTON, [=](wxCommandEvent &) {
         PrimAlgorithm prim;
-        prim(nv->graph);
+        nv->setActions(prim.execute(nv->graph));
     });
     adjacencyListButton->Bind(wxEVT_BUTTON, [=](wxCommandEvent &) {
         std::map<int, std::list<std::pair<int, int>>> adjList = nv->graph.getAdjacencyList();
@@ -42,7 +42,7 @@ InstrumentsPanel::InstrumentsPanel(wxFrame *parent, NodeVisualizer *nv) :
             }
             adjListStr += _("} ");
         }
-        wxGetTextFromUser(_T("Enter node label:"), _T("Label"), adjListStr);
+        wxGetTextFromUser(_("Adjacency list:"), _("Adjacency list"), adjListStr);
     });
 
     SetSizer(sizerV);

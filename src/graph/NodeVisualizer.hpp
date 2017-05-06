@@ -6,6 +6,7 @@
 #include "InstrumentsPanel.h"
 #include "NodeProperties.hpp"
 #include <list>
+#include <vector>
 
 namespace GraphStructure {
 class Node;
@@ -83,6 +84,11 @@ class NodeVisualizer : public GLPane {
     void zoomIn(float scaling, wxPoint center);
     void zoomOut(float scaling, wxPoint center);
 
+    void dispatchActionList(wxTimerEvent& event);
+    void setActions(std::vector<int> actions);
+    int getAction(int id) { return actions[id]; };
+    std::vector<int> getActions() { return actions; };
+
     virtual ~NodeVisualizer();
   private:
     //Mouse control
@@ -101,5 +107,9 @@ class NodeVisualizer : public GLPane {
     float maxScale;
     bool drawingEdge = false;
     wxMenu *contextMenuNode;
+
+    wxTimer* m_timer;
+    std::vector<int> actions;
+    bool algorithmStarted = false;
 };
 }

@@ -5,9 +5,10 @@
 #include <queue>
 #include <vector>
 
-void PrimAlgorithm::operator()(GraphStructure::Graph &graph) {
+std::vector<int> PrimAlgorithm::execute(GraphStructure::Graph &graph) {
+    std::vector<int> actionList;
     if (graph.getNodes().size() == 0)
-        return;
+        return actionList;
 
     using IPair = std::pair<unsigned int, int>;
     const int INF = std::numeric_limits<int>::max();
@@ -28,16 +29,17 @@ void PrimAlgorithm::operator()(GraphStructure::Graph &graph) {
         int minKeyNode = queue.top().second;
         queue.pop();
 
-        if(!included[minKeyNode]) {}
-        //selectNode(*graph.getNodeById(minKeyNode));
+        if(!included[minKeyNode]) {
+            actionList.push_back(minKeyNode);
+        }
 
         included[minKeyNode] = true;
         if (parent[minKeyNode] != -1) {
             for(auto&& edge: graph.getEdges()) {
                 if((edge.from.id == minKeyNode && edge.to.id == parent[minKeyNode]) ||
-                        (edge.to.id == minKeyNode && edge.from.id == parent[minKeyNode])) {
-//                    GraphStructure::Edge *tempEdge = const_cast<Edge*>(&edge);
-                    //selectEdge(*tempEdge);
+                   (edge.to.id == minKeyNode && edge.from.id == parent[minKeyNode])) {
+                        GraphStructure::Edge *tempEdge = const_cast<Edge*>(&edge);
+                        actionList.push_back(tempEdge->id);
                 }
             }
         }
@@ -53,4 +55,5 @@ void PrimAlgorithm::operator()(GraphStructure::Graph &graph) {
             }
         }
     }
+    return actionList;
 }
