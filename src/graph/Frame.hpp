@@ -33,8 +33,6 @@ class Frame : public wxFrame {
     void onAbout (wxCommandEvent &event);
 
     void saveGraph(wxString path);
-
-    wxDECLARE_EVENT_TABLE();
 };
 
 enum class Window_MenuID : int {

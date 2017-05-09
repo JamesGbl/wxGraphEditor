@@ -16,16 +16,6 @@
 #include <wx/xml/xml.h>
 
 namespace GraphStructure {
-wxBEGIN_EVENT_TABLE(Frame, wxFrame)
-    EVT_MENU(wxID_NEW, Frame::onNew)
-    EVT_MENU(wxID_OPEN, Frame::onOpen)
-    EVT_MENU(wxID_SAVE, Frame::onSave)
-    EVT_MENU(wxID_SAVEAS, Frame::onSaveAs)
-    EVT_MENU(wxID_EXIT, Frame::onQuit)
-    EVT_MENU(wxID_ABOUT, Frame::onAbout)
-    EVT_CLOSE(Frame::onClose)
-wxEND_EVENT_TABLE()
-
 Frame::Frame(const wxSize &windowSize) :
     wxFrame(NULL, wxID_ANY, wxT(APP_NAME), wxDefaultPosition, windowSize) {
     viewContainer.nodeProperties = new NodeProperties(this);
@@ -55,6 +45,14 @@ Frame::Frame(const wxSize &windowSize) :
     CreateStatusBar(1);
     SetStatusText(_("Ready"), 0);
     SetIcon(wxIcon("aaaa"));
+
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &Frame::onNew, this, wxID_NEW);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &Frame::onOpen, this, wxID_OPEN);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &Frame::onSave, this, wxID_SAVE);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &Frame::onSaveAs, this, wxID_SAVEAS);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &Frame::onQuit, this, wxID_CLOSE);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &Frame::onAbout, this, wxID_ABOUT);
+    Bind(wxEVT_CLOSE_WINDOW, &Frame::onClose, this);
 }
 
 void Frame::setupLayout() {
