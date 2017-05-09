@@ -30,6 +30,8 @@ InstrumentsPanel::InstrumentsPanel(wxFrame *parent, NodeVisualizer *nv) :
     });
     algorithmButton->Bind(wxEVT_BUTTON, [=](wxCommandEvent &) {
         PrimAlgorithm prim;
+        nv->deselectNodes();
+        nv->deselectEdges();
         nv->setActions(prim.execute(nv->graph));
     });
     adjacencyListButton->Bind(wxEVT_BUTTON, [=](wxCommandEvent &) {
