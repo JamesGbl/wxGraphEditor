@@ -46,3 +46,6 @@ Desktop.ini
 *.exe
 *.out
 *.app
+
+# Misc
+CppCheckResults.xml
