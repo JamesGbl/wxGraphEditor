@@ -128,6 +128,7 @@ void Frame::onOpen(wxCommandEvent &WXUNUSED(event)) {
         }
         graphItem = graphItem->GetNext();
     }
+    saved = true;
     Refresh();
 }
 
