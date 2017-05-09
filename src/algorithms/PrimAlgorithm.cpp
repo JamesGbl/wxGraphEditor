@@ -17,11 +17,20 @@ std::vector<int> PrimAlgorithm::execute(GraphStructure::Graph &graph) {
     int nodesNumber = graph.getNodes().size();
 
     std::priority_queue< IPair, std::vector <IPair>, std::greater<IPair> > queue;
-    std::vector<int> keys(nodesNumber, INF);
-    std::vector<int> parent(nodesNumber, -1);
-    std::vector<bool> included(nodesNumber, false);
+    std::map<int, int> keys;
+    for(auto node: graph.getNodes()) {
+        keys[node.id] = INF;
+    }
+    std::map<int, int> parent;
+    for(auto node: graph.getNodes()) {
+        parent[node.id] = -1;
+    }
+    std::map<int, bool> included;
+    for(auto node: graph.getNodes()) {
+        included[node.id] = false;
+    }
 
-    int startNode = 0;
+    int startNode = graph.getNodes().front().id;
     queue.push(std::make_pair(0, startNode));
     keys[startNode] = 0;
 
@@ -38,8 +47,7 @@ std::vector<int> PrimAlgorithm::execute(GraphStructure::Graph &graph) {
             for(auto&& edge: graph.getEdges()) {
                 if((edge.from.id == minKeyNode && edge.to.id == parent[minKeyNode]) ||
                         (edge.to.id == minKeyNode && edge.from.id == parent[minKeyNode])) {
-                    GraphStructure::Edge *tempEdge = const_cast<Edge *>(&edge);
-                    actionList.push_back(tempEdge->id);
+                    actionList.push_back(edge.id);
                 }
             }
         }
