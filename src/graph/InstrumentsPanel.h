@@ -9,7 +9,5 @@ class NodeVisualizer;
 class InstrumentsPanel : public wxPanel {
   public:
     InstrumentsPanel(wxFrame *parent, NodeVisualizer *nv);
-
-    char instrumentSelected;
 };
 }

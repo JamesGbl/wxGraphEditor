@@ -12,7 +12,7 @@ class Node {
     wxPoint pos;
     wxString label;
 
-    int id;
+    int id = -1;
 
     std::list<Edge> edgeConnections;
     unsigned int radius;

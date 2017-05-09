@@ -8,7 +8,7 @@ class Edge;
 
 class NodeProperties : public wxDataViewListCtrl {
   public:
-    NodeProperties(wxFrame *parent);
+    explicit NodeProperties(wxFrame *parent);
 
     void showNode(const Node &node);
     void showEdge(const Edge &edge);
