@@ -7,7 +7,7 @@
 #include "App.hpp"
 #include "WindowViews.hpp"
 
-#define GRAPH_EDITOR_VERSION "0.9rc"
+#define GRAPH_EDITOR_VERSION "1.0"
 
 namespace GraphStructure {
 class Frame : public wxFrame {
