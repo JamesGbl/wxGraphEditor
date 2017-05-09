@@ -9,4 +9,5 @@ class GraphAlgorithm {
     GraphAlgorithm() {};
 
     virtual std::vector<int> execute (GraphStructure::Graph &graph) = 0;
+    virtual ~GraphAlgorithm() {}
 };

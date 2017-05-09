@@ -249,7 +249,7 @@ void NodeVisualizer::onContextMenu(wxContextMenuEvent &event) {
     event.Skip();
 }
 
-void NodeVisualizer::render(wxPaintEvent &event) {
+void NodeVisualizer::render(wxPaintEvent &WXUNUSED(event)) {
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_POLYGON_SMOOTH);
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
@@ -413,7 +413,7 @@ void NodeVisualizer::setActions(std::vector<int> actions) {
     this->algorithmStarted = true;
 }
 
-void NodeVisualizer::dispatchActionList(wxTimerEvent &event) {
+void NodeVisualizer::dispatchActionList(wxTimerEvent &WXUNUSED(event)) {
     if(algorithmStarted) {
         static size_t elementNumber = 0;
         if(elementNumber == actions.size()) {

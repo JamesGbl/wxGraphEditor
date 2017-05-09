@@ -78,7 +78,7 @@ void Frame::setupLayout() {
     SetSizer(sizer);
 }
 
-void Frame::onNew(wxCommandEvent &event) {
+void Frame::onNew(wxCommandEvent &WXUNUSED(event)) {
     graph->removeAllEdges();
     graph->removeAllNodes();
     Refresh();
@@ -180,15 +180,15 @@ void Frame::saveGraph(wxString path) {
     graphXML.Save(path);
 }
 
-void Frame::onQuit(wxCommandEvent &event) {
+void Frame::onQuit(wxCommandEvent &WXUNUSED(event)) {
     Destroy();
 }
 
-void Frame::onAbout(wxCommandEvent &event) {
+void Frame::onAbout(wxCommandEvent &WXUNUSED(event)) {
     wxMessageBox(_("GraphEditor\nversion ") + _(GRAPH_EDITOR_VERSION));
 }
 
-void Frame::onClose(wxCloseEvent &event) {
+void Frame::onClose(wxCloseEvent &WXUNUSED(event)) {
     Destroy();
 }
 }

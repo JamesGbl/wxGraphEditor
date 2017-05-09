@@ -14,7 +14,6 @@ std::vector<int> PrimAlgorithm::execute(GraphStructure::Graph &graph) {
     const int INF = std::numeric_limits<int>::max();
 
     GraphStructure::Graph::AdjacencyList adjList = graph.getAdjacencyList();
-    int nodesNumber = graph.getNodes().size();
 
     std::priority_queue< IPair, std::vector <IPair>, std::greater<IPair> > queue;
     std::map<int, int> keys;

@@ -32,7 +32,7 @@ GLPane::~GLPane() {
     delete m_context;
 }
 
-void GLPane::onWindowResize(wxSizeEvent &event) {
+void GLPane::onWindowResize(wxSizeEvent &WXUNUSED(event)) {
     Refresh();
 }
 
